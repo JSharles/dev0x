@@ -14,11 +14,12 @@ import {
   CONTRACT_ADDRESS,
   workflowStatusLabels,
 } from "@/lib/constants";
+import { toast } from "sonner";
+import { useVoteStatusChange } from "@/hooks/use-vote-status-change";
 
 export const BentoGrid = ({ className }: { className?: string }) => {
   const [open, setOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<BentoItem | null>(null);
-  const [refreshCounter, setRefreshCounter] = useState(0);
 
   const { data: workflowStatus, refetch } = useReadContract({
     address: CONTRACT_ADDRESS,
@@ -29,24 +30,35 @@ export const BentoGrid = ({ className }: { className?: string }) => {
     },
   });
 
-  const handleRefresh = () => {
-    console.log("Forçage du rafraîchissement du status...");
-    setRefreshCounter((prev) => prev + 1);
+  const { newLog, clearNewLog } = useVoteStatusChange(() => {
     refetch();
-  };
+  });
+
+  useEffect(() => {
+    if (newLog) {
+      try {
+        const args = newLog.args || {};
+        const previousStatus = Number(args.previousStatus);
+        const newStatus = Number(args.newStatus);
+
+        toast.success("Statut de vote modifié", {
+          description: `Changement de "${workflowStatusLabels[previousStatus]}" à "${workflowStatusLabels[newStatus]}"`,
+          duration: 5000,
+        });
+      } catch (error) {
+        toast.success("Statut de vote modifié", {
+          description: "Le statut du vote a été mis à jour",
+          duration: 3000,
+        });
+      }
+
+      clearNewLog();
+    }
+  }, [newLog, clearNewLog, workflowStatusLabels]);
 
   useEffect(() => {
     refetch();
-
-    const interval = setInterval(() => {
-      if (open) {
-        console.log("Rafraîchissement périodique...");
-        refetch();
-      }
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, [refreshCounter, open, refetch]);
+  }, [refetch]);
 
   const currentStatusLabel =
     workflowStatus !== undefined
@@ -59,7 +71,7 @@ export const BentoGrid = ({ className }: { className?: string }) => {
       description: `${currentStatusLabel}`,
       imageUrl: "/images/status-img.png",
       className: "md:col-span-1",
-      form: <VoteStatusForm onStatusChange={handleRefresh} />,
+      form: <VoteStatusForm />,
     },
     {
       title: "Register Voter",
@@ -123,7 +135,7 @@ export const BentoGrid = ({ className }: { className?: string }) => {
               variant="outline"
               className="w-full mt-4 max-w-sm border-pink-500 text-pink-500 bg-transparent hover:bg-pink-500/20 hover:text-pink-300 transition-all"
               onClick={() => {
-                handleRefresh();
+                refetch();
                 setOpen(false);
               }}
             >

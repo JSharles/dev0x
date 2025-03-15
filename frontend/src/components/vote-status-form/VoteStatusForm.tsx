@@ -13,7 +13,7 @@ import useWriteSC from "@/hooks/use-write-sc";
 import VoteStatus from "@/types/vote-status";
 import { getContractFunctionFromStatusIndex } from "@/types/sc-functions";
 
-const VoteStatusForm = ({ onStatusChange }: { onStatusChange: () => void }) => {
+const VoteStatusForm = () => {
   const [selectedStatus, setSelectedStatus] = useState<{
     label: string;
     index: number;
@@ -55,11 +55,6 @@ const VoteStatusForm = ({ onStatusChange }: { onStatusChange: () => void }) => {
 
   if (isConfirmed && txHash) {
     setTxHash(null);
-
-    if (onStatusChange) {
-      console.log("Transaction confirmée, rafraîchissement du statut...");
-      onStatusChange();
-    }
   }
 
   const handleSubmit = async () => {

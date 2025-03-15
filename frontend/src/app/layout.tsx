@@ -4,6 +4,7 @@ import "./globals.css";
 import "@rainbow-me/rainbowkit/styles.css";
 import { Providers } from "./providers";
 import AuthRedirectWrapper from "./auth-redirect-wrapper";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,6 +33,19 @@ export default function RootLayout({
       >
         <Providers>
           <AuthRedirectWrapper>{children}</AuthRedirectWrapper>
+          <Toaster
+            position="top-right"
+            theme="dark"
+            richColors
+            toastOptions={{
+              style: {
+                background: "#1a1a1a",
+                border: "1px solid #333",
+                color: "#fff",
+              },
+              className: "ma-classe-globale",
+            }}
+          />
         </Providers>
       </body>
     </html>
