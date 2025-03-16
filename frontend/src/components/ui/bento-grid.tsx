@@ -8,7 +8,7 @@ import VoteStatusForm from "../vote-status-form/VoteStatusForm";
 import RegisterVoterForm from "../register-voter-form/RegisterVoterForm";
 import RegisterProposalForm from "../register-proposal-form/register-proposal-form";
 import { Button } from "./button";
-import { useReadContract } from "wagmi";
+import { useAccount, useReadContract } from "wagmi";
 import {
   CONTRACT_ABI,
   CONTRACT_ADDRESS,
@@ -20,6 +20,16 @@ import { useVoteStatusChange } from "@/hooks/use-vote-status-change";
 export const BentoGrid = ({ className }: { className?: string }) => {
   const [open, setOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<BentoItem | null>(null);
+
+  const { address } = useAccount();
+
+  const { data: owner } = useReadContract({
+    address: CONTRACT_ADDRESS,
+    abi: CONTRACT_ABI,
+    functionName: "owner",
+  });
+
+  const isOwner = address === owner;
 
   const { data: workflowStatus, refetch } = useReadContract({
     address: CONTRACT_ADDRESS,
@@ -72,6 +82,7 @@ export const BentoGrid = ({ className }: { className?: string }) => {
       imageUrl: "/images/status-img.png",
       className: "md:col-span-1",
       form: <VoteStatusForm />,
+      isAllowed: isOwner,
     },
     {
       title: "Register Voter",
@@ -79,6 +90,7 @@ export const BentoGrid = ({ className }: { className?: string }) => {
       imageUrl: "/images/register-voter-img.png",
       className: "md:col-span-1",
       form: <RegisterVoterForm />,
+      isAllowed: isOwner,
     },
     {
       title: "Register Proposal",
@@ -86,6 +98,7 @@ export const BentoGrid = ({ className }: { className?: string }) => {
       imageUrl: "/images/register-proposal-img.png",
       className: "md:col-span-1",
       form: <RegisterProposalForm />,
+      isAllowed: true,
     },
     {
       title: "Vote",
@@ -93,6 +106,7 @@ export const BentoGrid = ({ className }: { className?: string }) => {
       imageUrl: "/images/vote-img.png",
       className: "md:col-span-3",
       form: <>You can vote here</>,
+      isAllowed: true,
     },
   ];
 
@@ -111,6 +125,7 @@ export const BentoGrid = ({ className }: { className?: string }) => {
                 title={item.title}
                 description={item.description}
                 imageUrl={item.imageUrl}
+                isAllowed={item.isAllowed}
                 className={cn("cursor-pointer hover:scale-105", item.className)}
                 onClick={() => {
                   setSelectedItem(item);
