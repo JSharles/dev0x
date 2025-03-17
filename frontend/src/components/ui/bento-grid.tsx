@@ -16,6 +16,7 @@ import {
 } from "@/lib/constants";
 import { toast } from "sonner";
 import { useVoteStatusChange } from "@/hooks/use-vote-status-change";
+import VoteForm from "../vote-form/VoteForm";
 
 export const BentoGrid = ({ className }: { className?: string }) => {
   const [open, setOpen] = useState(false);
@@ -80,7 +81,7 @@ export const BentoGrid = ({ className }: { className?: string }) => {
       title: "Status",
       description: `${currentStatusLabel}`,
       imageUrl: "/images/status-img.png",
-      className: "md:col-span-1",
+      className: "md:col-span-3",
       form: <VoteStatusForm />,
       isAllowed: isOwner,
     },
@@ -88,7 +89,7 @@ export const BentoGrid = ({ className }: { className?: string }) => {
       title: "Register Voter",
       description: "Register new voters",
       imageUrl: "/images/register-voter-img.png",
-      className: "md:col-span-1",
+      className: "md:col-span-2",
       form: <RegisterVoterForm />,
       isAllowed: isOwner,
     },
@@ -104,7 +105,15 @@ export const BentoGrid = ({ className }: { className?: string }) => {
       title: "Vote",
       description: "Cast your vote on a proposal.",
       imageUrl: "/images/vote-img.png",
-      className: "md:col-span-3",
+      className: "md:col-span-1",
+      form: <VoteForm />,
+      isAllowed: true,
+    },
+    {
+      title: "Results",
+      description: "See vote result and stats.",
+      imageUrl: "/images/result-img.png",
+      className: "md:col-span-2",
       form: <>You can vote here</>,
       isAllowed: true,
     },
@@ -140,22 +149,25 @@ export const BentoGrid = ({ className }: { className?: string }) => {
 
       {open && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/50">
-          <div className="w-[90%] max-w-[400px] bg-black rounded-lg p-6 shadow-lg border border-gray-700 relative">
+          <div className="w-[90%] max-w-[600px] bg-black rounded-lg p-6 shadow-lg border border-gray-700 relative">
             <h2 className="text-xl font-semibold text-center mb-4 text-white">
               {selectedItem?.title}
             </h2>
             {selectedItem?.form}
 
-            <Button
-              variant="outline"
-              className="w-full mt-4 max-w-sm border-pink-500 text-pink-500 bg-transparent hover:bg-pink-500/20 hover:text-pink-300 transition-all"
-              onClick={() => {
-                refetch();
-                setOpen(false);
-              }}
-            >
-              Close
-            </Button>
+            {/* Conteneur centré */}
+            <div className="flex justify-center mt-4">
+              <Button
+                variant="outline"
+                className="w-full  border-pink-500 text-pink-500 bg-transparent hover:bg-pink-500/20 hover:text-pink-300 transition-all"
+                onClick={() => {
+                  refetch();
+                  setOpen(false);
+                }}
+              >
+                Close
+              </Button>
+            </div>
           </div>
         </div>
       )}
