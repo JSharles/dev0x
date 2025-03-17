@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { createPublicClient, http, parseAbiItem } from "viem";
+import { BaseError, createPublicClient, http, parseAbiItem } from "viem";
 import { hardhat } from "viem/chains";
 import { useAccount, useWalletClient } from "wagmi";
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from "@/lib/constants";
@@ -45,8 +45,12 @@ const VoteForm = () => {
         if (ids.length > 0) {
           fetchProposalDetails(ids);
         }
-      } catch (error) {
-        alert(error.shortMessage);
+      } catch (error: unknown) {
+        if (error instanceof BaseError) {
+          alert(error.shortMessage);
+        } else {
+          alert("An error occured");
+        }
       }
     };
 
