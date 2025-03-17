@@ -49,6 +49,7 @@ export const BentoGrid = ({ className }: { className?: string }) => {
   useEffect(() => {
     if (newLog) {
       try {
+        // @ts-expect-error Type error: Property 'args' does not exist on type 'Log'
         const args = newLog.args || {};
         const previousStatus = Number(args.previousStatus);
         const newStatus = Number(args.newStatus);
@@ -58,6 +59,7 @@ export const BentoGrid = ({ className }: { className?: string }) => {
           duration: 5000,
         });
       } catch (error) {
+        console.log(error);
         toast.success("Statut de vote modifié", {
           description: "Le statut du vote a été mis à jour",
           duration: 3000,
@@ -66,6 +68,7 @@ export const BentoGrid = ({ className }: { className?: string }) => {
 
       clearNewLog();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newLog, clearNewLog, workflowStatusLabels]);
 
   useEffect(() => {

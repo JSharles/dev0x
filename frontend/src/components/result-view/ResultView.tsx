@@ -18,19 +18,20 @@ const ResultView = () => {
   useEffect(() => {
     const fetchWinningProposal = async () => {
       try {
-        const winningProposalID: bigint = await publicClient.readContract({
+        const winningProposalID: unknown = await publicClient.readContract({
           address: CONTRACT_ADDRESS,
           abi: CONTRACT_ABI,
           functionName: "winningProposalID",
         });
 
-        if (winningProposalID >= 0) {
-          const proposal = await publicClient.readContract({
-            address: CONTRACT_ADDRESS,
-            abi: CONTRACT_ABI,
-            functionName: "getOneProposal",
-            args: [Number(winningProposalID)],
-          });
+        if (Number(winningProposalID) >= 0) {
+          const proposal: Record<string, string> =
+            (await publicClient.readContract({
+              address: CONTRACT_ADDRESS,
+              abi: CONTRACT_ABI,
+              functionName: "getOneProposal",
+              args: [Number(winningProposalID)],
+            })) as Record<string, string>;
 
           setWinningProposal({
             id: Number(winningProposalID),
@@ -38,7 +39,9 @@ const ResultView = () => {
             voteCount: Number(proposal.voteCount),
           });
         }
-      } catch (error) {}
+      } catch (error) {
+        console.log(error);
+      }
     };
 
     fetchWinningProposal();

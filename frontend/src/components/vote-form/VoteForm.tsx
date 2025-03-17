@@ -61,18 +61,20 @@ const VoteForm = () => {
     try {
       const fetchedProposals = await Promise.all(
         ids.map(async (proposalId) => {
-          const proposal = await publicClient.readContract({
+          const proposal = (await publicClient.readContract({
             address: CONTRACT_ADDRESS,
             abi: CONTRACT_ABI,
             functionName: "getOneProposal",
             args: [proposalId],
-          });
+          })) as Record<string, string>;
 
           return { id: proposalId, description: proposal.description };
         })
       );
       setProposals(fetchedProposals);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const voteForProposal = async (proposalId: number) => {
@@ -90,15 +92,15 @@ const VoteForm = () => {
       });
 
       await walletClient.writeContract(request);
-    } catch (error: any) {
+    } catch (error: unknown) {
       let errorMessage = "Transaction failed.";
 
-      if (error.shortMessage) {
+      if (error instanceof BaseError) {
         errorMessage = error.shortMessage;
-      } else if (error.message) {
-        errorMessage = error.message;
-      } else if (error.details) {
-        errorMessage = error.details;
+      } else if (typeof error === "object" && error !== null) {
+        const err = error as { message?: string; details?: string };
+        if (err.message) errorMessage = err.message;
+        else if (err.details) errorMessage = err.details;
       }
 
       alert(errorMessage);
