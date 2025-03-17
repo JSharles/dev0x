@@ -9,9 +9,9 @@ const config: HardhatUserConfig = {
       url: "http://127.0.0.1:8545",
     },
     sepolia: {
-      url: process.env.SEPOLIA_URL,
-      accounts: [process.env.PRIVATE_KEY],
-    }
+      url: process.env.SEPOLIA_URL as string,
+      accounts: [process.env.PRIVATE_KEY as string] ,
+    },
   },
 };
 
