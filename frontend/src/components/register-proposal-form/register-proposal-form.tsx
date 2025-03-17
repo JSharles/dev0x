@@ -6,7 +6,7 @@ import { useWaitForTransactionReceipt } from "wagmi";
 import useWriteSC from "@/hooks/use-write-sc";
 import ContractFunction from "@/types/sc-functions";
 
-const RegisterProposalForm = ({}: {}) => {
+const RegisterProposalForm = () => {
   const [proposal, setProposal] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [txHash, setTxHash] = useState<`0x${string}` | null>(null);
