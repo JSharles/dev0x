@@ -6,4 +6,5 @@ export type BentoItem = {
   imageUrl: string;
   className: string;
   form: ReactNode;
+  isAllowed: boolean;
 };
