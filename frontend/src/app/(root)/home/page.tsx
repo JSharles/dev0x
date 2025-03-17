@@ -1,7 +1,5 @@
 import { BentoGrid } from "@/components/ui/bento-grid";
 
-export function HomePage() {
+export default function HomePage() {
   return <BentoGrid />;
 }
-
-export default HomePage;

@@ -8,6 +8,7 @@ export const BentoGridItem = ({
   title,
   description,
   imageUrl,
+  isAllowed,
   icon,
   onClick,
 }: {
@@ -15,6 +16,7 @@ export const BentoGridItem = ({
   title?: string | React.ReactNode;
   description?: string | React.ReactNode;
   imageUrl?: string;
+  isAllowed: boolean;
   icon?: React.ReactNode;
   onClick?: () => void;
 }) => {
@@ -26,11 +28,9 @@ export const BentoGridItem = ({
         onClick ? "cursor-pointer" : "",
         className
       )}
-      onClick={onClick}
+      onClick={isAllowed ? onClick : undefined}
     >
-      {/* Container pour l'image avec ratio fixe */}
       <div className="relative w-full h-52 overflow-hidden">
-        {/* Image header */}
         {imageUrl ? (
           <Image
             src={imageUrl}

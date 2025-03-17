@@ -3,7 +3,7 @@ import { CONTRACT_ADDRESS, CONTRACT_ABI } from "@/lib/constants";
 import { useState, useRef } from "react";
 import { Log } from "viem";
 
-export function useVoteStatusChange(onStatusChange) {
+export function useVoteStatusChange(onStatusChange: (newLogs: Log[]) => void) {
   const [logs, setLogs] = useState<Log[]>([]);
   const [newLog, setNewLog] = useState<Log | null>(null);
   const processedLogsRef = useRef<Set<string>>(new Set());

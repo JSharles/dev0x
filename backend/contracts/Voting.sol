@@ -38,6 +38,7 @@ contract Voting is Ownable, ReentrancyGuard {
     mapping(address => Voter) private voters;
     mapping(bytes32 => bool) private proposalExists;
 
+
     event VoterRegistered(address voterAddress);
     event WorkflowStatusChange(WorkflowStatus previousStatus, WorkflowStatus newStatus);
     event ProposalRegistered(uint proposalId);
@@ -130,7 +131,12 @@ contract Voting is Ownable, ReentrancyGuard {
 
         voters[msg.sender].votedProposalId = _id;
         voters[msg.sender].hasVoted = true;
-        proposalsArray[_id].voteCount++;
+        proposals[_id].voteCount++;
+
+        // Mise à jour en temps réel du gagnant
+        if (proposals[_id].voteCount > proposals[winningProposalID].voteCount) {
+            winningProposalID = _id;
+        }
 
         emit Voted(msg.sender, _id);
     }
