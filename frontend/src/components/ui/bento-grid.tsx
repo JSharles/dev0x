@@ -17,6 +17,7 @@ import {
 import { toast } from "sonner";
 import { useVoteStatusChange } from "@/hooks/use-vote-status-change";
 import VoteForm from "../vote-form/VoteForm";
+import ResultView from "../result-view/ResultView";
 
 export const BentoGrid = ({ className }: { className?: string }) => {
   const [open, setOpen] = useState(false);
@@ -114,7 +115,7 @@ export const BentoGrid = ({ className }: { className?: string }) => {
       description: "See vote result and stats.",
       imageUrl: "/images/result-img.png",
       className: "md:col-span-2",
-      form: <>You can vote here</>,
+      form: <ResultView />,
       isAllowed: true,
     },
   ];
